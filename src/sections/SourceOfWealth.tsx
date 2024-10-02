@@ -1,9 +1,7 @@
 import React from 'react';
-import { Form, Checkbox, Select, Button, Row, Col, Divider } from 'antd';
+import { Form, Checkbox, Button, Row, Col, Divider } from 'antd';
 import { FormData } from '../types/FormData';
 import CountriesSelect from '../components/form/CountriesSelect';
-
-const { Option } = Select;
 
 interface SourceOfWealthProps {
   formData: FormData;
@@ -42,8 +40,6 @@ const SourceOfWealth: React.FC<SourceOfWealthProps> = ({
     'Wages/pension/social security',
     'Other',
   ];
-
-  const countriesOptions = ['United States', 'United Kingdom', 'Spain', 'Germany', 'Canada'];
 
   const handleCheckboxChange = (field: string, checkedValues: any) => {
     onFormChange(field, checkedValues);

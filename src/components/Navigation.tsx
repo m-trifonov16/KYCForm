@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState, useCallback } from 'react';
 import { Steps } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,11 +9,11 @@ const Navigation = forwardRef((_props, ref) => {
   const navigate = useNavigate();
 
   const incrementStep = () => {
-    setCurrentStep(currentStep + 1);
+    setCurrentStep((prevStep) => prevStep + 1);
   };
 
   const decrementStep = () => {
-    setCurrentStep(currentStep - 1);
+    setCurrentStep((prevStep) => prevStep - 1);
   };
 
   useImperativeHandle(ref, () => ({
@@ -21,20 +21,9 @@ const Navigation = forwardRef((_props, ref) => {
     decrementStep,
   }));
 
-  useEffect(() => {
-    navigateToStep(currentStep);
-  }, [currentStep]);
-
-  const handleStepChange = (step: number) => {
-    if (step > currentStep){
-        return;
-    }
-
-    setCurrentStep(step);
-  };
-
-  const navigateToStep = (step: number) => {
-    switch (step) {
+  const navigateToStep = useCallback(
+    (step: number) => {
+      switch (step) {
         case 0:
           navigate('/personal-data');
           break;
@@ -68,21 +57,34 @@ const Navigation = forwardRef((_props, ref) => {
         default:
           navigate('/step1');
       }
-  }
+    },
+    [navigate] // Важно добавить navigate как зависимость
+  );
 
+  useEffect(() => {
+    navigateToStep(currentStep);
+  }, [currentStep, navigateToStep]);
+
+  const handleStepChange = (step: number) => {
+    if (step > currentStep) {
+      return;
+    }
+
+    setCurrentStep(step);
+  };
 
   return (
     <Steps direction="vertical" current={currentStep} onChange={handleStepChange}>
-      <Step title="Personal data"/>
-      <Step title="Contact data"/>
-      <Step title="Household data"/>
-      <Step title="Employment/income"/>
-      <Step title="Assets and investments"/>
-      <Step title="Liabilities"/>
-      <Step title="Source of wealth"/>
-      <Step title="Notes"/>
-      <Step title="Documents"/>
-      <Step title="Consents"/>
+      <Step title="Personal data" />
+      <Step title="Contact data" />
+      <Step title="Household data" />
+      <Step title="Employment/income" />
+      <Step title="Assets and investments" />
+      <Step title="Liabilities" />
+      <Step title="Source of wealth" />
+      <Step title="Notes" />
+      <Step title="Documents" />
+      <Step title="Consents" />
     </Steps>
   );
 });
